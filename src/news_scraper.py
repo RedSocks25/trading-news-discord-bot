@@ -41,7 +41,7 @@ def fetch_economic_events() -> list[EconomicEvent]:
 
     economic_event: EconomicEvent = {
       'time':     row.find('td', {'class': 'time'}).text.strip(),
-      'currency': row.find('td', {'class': 'flagCur'}).find('span').text.strip(),
+      'currency': row.find('td', {'class': 'flagCur'}).text.strip(),
       'impact':   impact,
       'event':    row.find('td', {'class': 'event'}).text.strip(),
     }
