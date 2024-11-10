@@ -30,6 +30,7 @@ async def economic_events_command(ctx):
   # Fetch economic events
   economic_events = fetch_economic_events()
 
+  # TODO: Move this to a separate file with constants
   # Define impact to emoji mapping
   impact_to_emoji = {
     'High Volatility Expected': '🔴',
@@ -42,8 +43,10 @@ async def economic_events_command(ctx):
 
   counter: int = 0
   for event in economic_events:
+    # TODO: Change name of variable
     emoji = impact_to_emoji.get(event['impact'], '')
 
+    # TODO: Change of variable names and consider moving this to a separate function (line 50 to 59)
     # Parse event time in Eastern Time
     event_time_et = datetime.combine(datetime.now(), datetime.strptime(event['time'], "%H:%M").time())
     eastern = pytz.timezone("America/New_York")
@@ -55,11 +58,22 @@ async def economic_events_command(ctx):
     # Get UNIX timestamp in seconds
     unix_timestamp = int(event_time_utc.timestamp())
 
+    
     events_message += f"<t:{unix_timestamp}:t> - {event['currency']} - {emoji} {event['impact']} - {event['event']}\n"
 
     counter += 1
     if counter == 5:
       break
+  
+  # Get the specific channel by ID
+  channel_id = 1091731066206830672  # Replace with your channel ID
+  channel = bot.get_channel(channel_id)
+
+  # Send economic events as a single message to the specific channel
+  if channel:
+      await channel.send(events_message)
+  else:
+      await ctx.send("Could not find the specified channel.")
     
   # Send economic events as a single message
   await ctx.send(events_message)
